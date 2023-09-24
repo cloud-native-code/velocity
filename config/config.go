@@ -8,24 +8,24 @@ import (
 type AppConfig struct {
 	Server struct {
 		Host string `mapstructure:"host"`
-		Port string `mapstructure:"port"`
+		Port int    `mapstructure:"port"`
 	} `mapstructure:"server"`
 }
 
-func BuildConfig(l *zap.Logger) *AppConfig {
+func BuildConfig(log *zap.Logger) *AppConfig {
 	viper.SetConfigName("app-config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
-		l.Error("Error while reading configuration file",
+		log.Error("Error while reading configuration file",
 			zap.String("err", err.Error()))
 	}
 
 	var config AppConfig
 
 	if err := viper.Unmarshal(&config); err != nil {
-		l.Error("Error unmarshaling configuration",
+		log.Error("Error unmarshaling configuration",
 			zap.String("err", err.Error()))
 	}
 
